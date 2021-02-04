@@ -1,0 +1,26 @@
+{
+  "name": "pengelolaan-barang-api",
+  "version": "1.0.0",
+  "description": "API untuk aplikasi pengelolaan barang",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GunawanAhmad/Pengelolaan-Barang-API.git"
+  },
+  "author": "Gunawan Nur Ahmad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GunawanAhmad/Pengelolaan-Barang-API/issues"
+  },
+  "homepage": "https://github.com/GunawanAhmad/Pengelolaan-Barang-API#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.15",
+    "multer": "^1.4.2"
+  }
+}
