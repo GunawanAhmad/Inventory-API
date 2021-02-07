@@ -44,6 +44,10 @@ const barangEksternalSchema = new Schema({
   status_peminjaman: {
     type: String,
   },
+  jumlah: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("BarangDipinjam", barangEksternalSchema);

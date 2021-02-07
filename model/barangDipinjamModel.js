@@ -6,23 +6,23 @@ const barangDipinjamSchema = new Schema({
     type: mongoose.Types.ObjectId,
     required: true,
   },
-  nama_peminjam : {
-      type : String,
-      required : true,   
+  nama_peminjam: {
+    type: String,
+    required: true,
   },
-  tanggal_dipinjam : {
-      type : Date,
-      required : true,
-  }
-  tanggal_dikembalikan : {
-      type : Date
+  tanggal_dipinjam: {
+    type: Date,
+    required: true,
   },
-  foto_bukti : {
-      type : String
+  tanggal_dikembalikan: {
+    type: Date,
   },
-  status_peminjaman : {
-      type : String,
-  }
+  foto_bukti: {
+    type: String,
+  },
+  status_peminjaman: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("BarangDipinjam", barangDipinjamSchema);

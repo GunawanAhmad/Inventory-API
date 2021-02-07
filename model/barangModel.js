@@ -31,6 +31,10 @@ const barangSchema = new Schema({
   tanggal_masuk: {
     type: Date,
   },
+  jumlah: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Barang", barangSchema);
