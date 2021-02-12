@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 require("dotenv").config();
 const userRoutes = require("./routes/userRoutes");
+const barangRoutes = require("./routes/barangRoutes");
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(userRoutes);
+app.use(barangRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
