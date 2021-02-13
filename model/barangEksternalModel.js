@@ -50,4 +50,4 @@ const barangEksternalSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("BarangDipinjam", barangEksternalSchema);
+module.exports = mongoose.model("BarangEksternals", barangEksternalSchema);
