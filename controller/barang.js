@@ -3,14 +3,19 @@ const BarangEks = require("../model/barangEksternalModel");
 const BarangDipinjam = require("../model/barangDipinjamModel");
 
 exports.tambahBarang = (req, res, next) => {
-  let { nama } = req.body;
+  let nama = req.body.nama;
   let { kondisi } = req.body;
-  let { status } = req.body;
+  let status = "ada";
   let { lokasi } = req.body;
-  let { milik } = req.body;
+  let milik = req.body.milik.toLowerCase();
   let tanggal_masuk = new Date();
   let { jumlah } = req.body;
   let { satuan } = req.body;
+  let photo = "";
+
+  if (req.file) {
+    photo = req.file.path.replace("\\", "/");
+  }
 
   let eksProp = null;
   if (milik === "eksternal") {
@@ -24,6 +29,7 @@ exports.tambahBarang = (req, res, next) => {
       tanggal_dipinjam,
       tanggal_dikembalikan,
       status_peminjaman,
+      bukti,
     };
   }
 
@@ -36,6 +42,7 @@ exports.tambahBarang = (req, res, next) => {
     tanggal_masuk,
     jumlah,
     satuan,
+    photo,
   };
 
   if (milik === "internal") {

@@ -34,9 +34,6 @@ const barangEksternalSchema = new Schema({
   tanggal_dikembalikan: {
     type: Date,
   },
-  foot_bukti: {
-    type: String,
-  },
   status_peminjaman: {
     type: String,
   },

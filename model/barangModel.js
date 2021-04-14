@@ -17,7 +17,7 @@ const barangSchema = new Schema({
   lokasi: {
     type: String,
   },
-  foto: {
+  photo: {
     type: String,
   },
   milik: {

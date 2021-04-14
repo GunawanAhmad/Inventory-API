@@ -18,9 +18,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
-
 app.use(bodyParser.json());
-app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(userRoutes);
 app.use(barangRoutes);
