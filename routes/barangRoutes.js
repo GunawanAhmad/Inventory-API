@@ -1,8 +1,8 @@
+const errorHandler = require("../util/errorHandler");
 const express = require("express");
 const router = express.Router();
 
 const barangControl = require("../controller/barang");
-// const { check, body } = require("express-validator");
 const multer = require("multer");
 
 const filterImg = (req, file, cb) => {
@@ -34,9 +34,14 @@ const uploadPhoto = multer({
 router.post(
   "/tambah-barang",
   uploadPhoto.single("photo"),
+  errorHandler.tambahBarangErrorHandler,
   barangControl.tambahBarang
 );
-router.delete("/hapus-barang", barangControl.hapusBarang);
+router.delete(
+  "/hapus-barang",
+
+  barangControl.hapusBarang
+);
 router.put("/edit-barang", barangControl.editBarang);
 router.get("/list-barang-internal", barangControl.cariSemuabarangInt);
 router.get("/list-barang-eksternal", barangControl.cariSemuabarangEks);

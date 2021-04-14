@@ -3,9 +3,9 @@ const BarangEks = require("../model/barangEksternalModel");
 const BarangDipinjam = require("../model/barangDipinjamModel");
 
 exports.tambahBarang = (req, res, next) => {
-  let nama = req.body.nama;
+  let { nama } = req.body;
   let { kondisi } = req.body;
-  let status = "ada";
+  let status = "Ada";
   let { lokasi } = req.body;
   let milik = req.body.milik.toLowerCase();
   let tanggal_masuk = new Date();
@@ -50,7 +50,11 @@ exports.tambahBarang = (req, res, next) => {
     let result = null;
     (async () => {
       result = await tambahBarang(barang);
-      res.status(200).json(result);
+      try {
+        res.status(200).json(result);
+      } catch (err) {
+        throw new Error("penambahan barang gagal");
+      }
     })();
   } else if (milik === "eksternal") {
     let eksBarang = {
