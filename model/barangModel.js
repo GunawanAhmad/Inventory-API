@@ -35,6 +35,12 @@ const barangSchema = new Schema({
     type: String,
     required: true,
   },
+  nama_peminjam: {
+    type: String,
+  },
+  tanggal_peminjaman: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Barang", barangSchema);

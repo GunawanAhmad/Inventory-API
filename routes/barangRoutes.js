@@ -1,7 +1,6 @@
 const errorHandler = require("../util/errorHandler");
 const express = require("express");
 const router = express.Router();
-
 const barangControl = require("../controller/barang");
 const multer = require("multer");
 

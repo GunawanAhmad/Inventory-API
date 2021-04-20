@@ -1,6 +1,6 @@
 const Barang = require("../model/barangModel");
 const BarangEks = require("../model/barangEksternalModel");
-const BarangDipinjam = require("../model/barangDipinjamModel");
+const fileHelper = require("../util/file");
 
 exports.tambahBarang = (req, res, next) => {
   let { nama } = req.body;
@@ -81,24 +81,31 @@ async function tambahBarang(barang) {
 exports.hapusBarang = (req, res, next) => {
   const { barangId } = req.body;
   const { milik } = req.body;
-  if (milik === "internal") {
+  console.log(barangId);
+  if (milik.toLowerCase() === "internal") {
     Barang.findByIdAndDelete(barangId)
       .then((result) => {
+        fileHelper.deleteFile(result.photo);
+        console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
       .catch((err) => {
         console.log(err);
         throw new Error("delete gagal");
       });
-  } else if (miliuk === "eksternal") {
+  } else if (milik.toLowerCase() === "eksternal") {
     BarangEks.findByIdAndDelete(barangId)
       .then((result) => {
+        fileHelper.deleteFile(result.photo);
+        console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
       .catch((err) => {
         console.log(err);
         throw new Error("delete gagal");
       });
+  } else {
+    throw new Error("milik barang tidak diketahui");
   }
 };
 
@@ -115,26 +122,14 @@ exports.editBarang = (req, res, next) => {
       barang.jumlah = req.body.jumlah;
       barang.satuan = req.body.satuan;
       barang.kondisi = req.body.kondisi;
+      barang.nama_peminjam = req.body.nama_peminjam;
+      barang.tanggal_peminjaman = new Date();
       return barang.save();
-    })
-    .then((barang) => {
-      if (!barang) {
-        throw new Error("Gagal edit");
-      }
-      if (barang.status === "dipinjam") {
-        const BarangPinjam = new BarangDipinjam({
-          barangId: barang._id,
-          nama_peminjam: req.body.nama_peminjam,
-          tanggal_dipinjam: new Date(),
-          tanggal_dikembalikan: null,
-          status_peminjaman: "dipinjam",
-        });
-        return BarangPinjam.save();
-      }
     })
     .then((barang) => {
       res.status(200).json({ message: "sukses", barang: barang });
     })
+
     .catch((err) => {
       console.log(err);
       throw new Error("edit barang gagal");
@@ -167,20 +162,20 @@ exports.detailBarang = (req, res, next) => {
   const { barangId } = req.query;
   const { milik } = req.query;
 
-  if (milik === "internal") {
+  if (milik.toLowerCase() === "internal") {
     Barang.findById(barangId)
       .then((result) => {
         if (!result) {
           throw new Error("Barang tidak ditemukan");
         }
-        console.log(result);
+        console.log("Fetch Barang Detail Succes");
         res.status(200).json(result);
       })
       .catch((err) => {
         console.log(err);
         throw new Error("query barang gagal");
       });
-  } else if (barang === "eksternal") {
+  } else if (milik.toLowerCase() === "eksternal") {
     BarangEks.findById(barangId)
       .then((result) => {
         if (!result) {
@@ -193,5 +188,7 @@ exports.detailBarang = (req, res, next) => {
         console.log(err);
         throw new Error("query barang gagal");
       });
+  } else {
+    throw new Error("query barang gagal");
   }
 };
