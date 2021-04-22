@@ -36,12 +36,12 @@ router.post(
   errorHandler.tambahBarangErrorHandler,
   barangControl.tambahBarang
 );
-router.delete(
-  "/hapus-barang",
-
-  barangControl.hapusBarang
+router.delete("/hapus-barang", barangControl.hapusBarang);
+router.post(
+  "/edit-barang",
+  uploadPhoto.single("photo"),
+  barangControl.editBarang
 );
-router.put("/edit-barang", barangControl.editBarang);
 router.get("/list-barang-internal", barangControl.cariSemuabarangInt);
 router.get("/list-barang-eksternal", barangControl.cariSemuabarangEks);
 router.get("/barang", barangControl.detailBarang);

@@ -114,7 +114,7 @@ exports.editBarang = (req, res, next) => {
   Barang.findById(barangId)
     .then((barang) => {
       if (!barang) {
-        throw new Error("Barang tidak ditemukan");
+        throw Error("Barang tidak ditemukan");
       }
       barang.nama = req.body.nama;
       barang.status = req.body.status;
@@ -122,8 +122,21 @@ exports.editBarang = (req, res, next) => {
       barang.jumlah = req.body.jumlah;
       barang.satuan = req.body.satuan;
       barang.kondisi = req.body.kondisi;
-      barang.nama_peminjam = req.body.nama_peminjam;
-      barang.tanggal_peminjaman = new Date();
+      if (req.file) {
+        if (barang.photo) {
+          fileHelper.deleteFile(barang.photo);
+        }
+        barang.photo = req.file.path.replace("\\", "/");
+      }
+
+      if (
+        req.body.status.toLowerCase() == "dipinjam" &&
+        barang.status.toLowerCase() != "dipinjam"
+      ) {
+        barang.nama_peminjam = req.body.nama_peminjam;
+        barang.tanggal_peminjaman = new Date();
+        //add to history peminjaman
+      }
       return barang.save();
     })
     .then((barang) => {
