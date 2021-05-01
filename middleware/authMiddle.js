@@ -5,7 +5,6 @@ require("dotenv").config();
 //if user is authorized then req.userId is exist
 exports.accesCheck = (req, res, next) => {
   let check = req.get("Authorization");
-
   if (!check) {
     let error = new Error("Acces Denied");
     error.statusCode = 401;
@@ -16,7 +15,7 @@ exports.accesCheck = (req, res, next) => {
   try {
     decoded = jwt.verify(token, process.env.SECRET_KEY);
   } catch (err) {
-    err.statusCode = 500;
+    err.statusCode = 401;
     throw err;
   }
   if (!decoded) {

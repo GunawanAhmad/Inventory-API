@@ -29,7 +29,7 @@ app.use((error, req, res, next) => {
   const message = error.message;
   const data = error.data;
   console.log(message);
-  res.status(422).json({ message: message, errorData: data });
+  res.status(status).json({ message: message, errorData: data });
 });
 
 const port = 5000;

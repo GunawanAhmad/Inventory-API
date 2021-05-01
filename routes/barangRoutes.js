@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const barangControl = require("../controller/barang");
 const multer = require("multer");
+const authMiddle = require("../middleware/authMiddle");
 
 const filterImg = (req, file, cb) => {
   if (
@@ -32,18 +33,34 @@ const uploadPhoto = multer({
 
 router.post(
   "/tambah-barang",
+  authMiddle.accesCheck,
   uploadPhoto.single("photo"),
   errorHandler.tambahBarangErrorHandler,
   barangControl.tambahBarang
 );
-router.delete("/hapus-barang", barangControl.hapusBarang);
+router.delete(
+  "/hapus-barang",
+  authMiddle.accesCheck,
+  barangControl.hapusBarang
+);
 router.post(
   "/edit-barang",
   uploadPhoto.single("photo"),
+  authMiddle.accesCheck,
+  errorHandler.editBarangErrorHandler,
   barangControl.editBarang
 );
-router.get("/list-barang-internal", barangControl.cariSemuabarangInt);
-router.get("/list-barang-eksternal", barangControl.cariSemuabarangEks);
-router.get("/barang", barangControl.detailBarang);
+router.get(
+  "/list-barang-internal",
+  authMiddle.accesCheck,
+  barangControl.cariSemuabarangInt
+);
+authMiddle.accesCheck,
+  router.get(
+    "/list-barang-eksternal",
+    authMiddle.accesCheck,
+    barangControl.cariSemuabarangEks
+  );
+router.get("/barang", authMiddle.accesCheck, barangControl.detailBarang);
 
 module.exports = router;

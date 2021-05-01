@@ -81,7 +81,6 @@ async function tambahBarang(barang) {
 exports.hapusBarang = (req, res, next) => {
   const { barangId } = req.body;
   const { milik } = req.body;
-  console.log(barangId);
   if (milik.toLowerCase() === "internal") {
     Barang.findByIdAndDelete(barangId)
       .then((result) => {
@@ -117,7 +116,6 @@ exports.editBarang = (req, res, next) => {
         throw Error("Barang tidak ditemukan");
       }
       barang.nama = req.body.nama;
-      barang.status = req.body.status;
       barang.lokasi = req.body.lokasi;
       barang.jumlah = req.body.jumlah;
       barang.satuan = req.body.satuan;
@@ -128,15 +126,20 @@ exports.editBarang = (req, res, next) => {
         }
         barang.photo = req.file.path.replace("\\", "/");
       }
-
       if (
         req.body.status.toLowerCase() == "dipinjam" &&
         barang.status.toLowerCase() != "dipinjam"
       ) {
+        barang.status = req.body.status;
         barang.nama_peminjam = req.body.nama_peminjam;
         barang.tanggal_peminjaman = new Date();
         //add to history peminjaman
+      } else {
+        barang.status = req.body.status;
+        barang.nama_peminjam = "";
+        barang.tanggal_peminjaman = "";
       }
+
       return barang.save();
     })
     .then((barang) => {
@@ -181,7 +184,6 @@ exports.detailBarang = (req, res, next) => {
         if (!result) {
           throw new Error("Barang tidak ditemukan");
         }
-        console.log("Fetch Barang Detail Succes");
         res.status(200).json(result);
       })
       .catch((err) => {
