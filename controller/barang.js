@@ -29,7 +29,6 @@ exports.tambahBarang = (req, res, next) => {
       tanggal_dipinjam,
       tanggal_dikembalikan,
       status_peminjaman,
-      bukti,
     };
   }
 
@@ -84,24 +83,30 @@ exports.hapusBarang = (req, res, next) => {
   if (milik.toLowerCase() === "internal") {
     Barang.findByIdAndDelete(barangId)
       .then((result) => {
+        if (!result) {
+          throw new Error("barang tidak ditemukan");
+        }
         fileHelper.deleteFile(result.photo);
         console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
       .catch((err) => {
         console.log(err);
-        throw new Error("delete gagal");
+        return next(err);
       });
   } else if (milik.toLowerCase() === "eksternal") {
     BarangEks.findByIdAndDelete(barangId)
       .then((result) => {
+        if (!result) {
+          throw new Error("barang tidak ditemukan");
+        }
         fileHelper.deleteFile(result.photo);
         console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
       .catch((err) => {
         console.log(err);
-        throw new Error("delete gagal");
+        return next(err);
       });
   } else {
     throw new Error("milik barang tidak diketahui");
@@ -148,62 +153,75 @@ exports.editBarang = (req, res, next) => {
 
     .catch((err) => {
       console.log(err);
-      throw new Error("edit barang gagal");
+      return next(err);
     });
 };
 
 exports.cariSemuabarangInt = (req, res, next) => {
   Barang.find()
     .then((result) => {
+      if (!result) {
+        throw new Error("Query barang gagal");
+      }
       res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
-      throw new Error("query barang gagal");
+      return next(err);
     });
 };
 
 exports.cariSemuabarangEks = (req, res, next) => {
   BarangEks.find()
     .then((result) => {
+      if (!result) {
+        throw new Error("Query barang gagal");
+      }
       res.status(200).json(result);
     })
     .catch((err) => {
       console.log(err);
-      throw new Error("query barang gagal");
+      return next(err);
     });
 };
 
 exports.detailBarang = (req, res, next) => {
   const { barangId } = req.query;
   const { milik } = req.query;
-
-  if (milik.toLowerCase() === "internal") {
-    Barang.findById(barangId)
-      .then((result) => {
-        if (!result) {
-          throw new Error("Barang tidak ditemukan");
-        }
-        res.status(200).json(result);
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new Error("query barang gagal");
-      });
-  } else if (milik.toLowerCase() === "eksternal") {
-    BarangEks.findById(barangId)
-      .then((result) => {
-        if (!result) {
-          throw new Error("Barang tidak ditemukan");
-        }
-        console.log(result);
-        res.status(200).json(result);
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new Error("query barang gagal");
-      });
+  if (barangId.match(/^[0-9a-fA-F]{24}$/)) {
+    // Yes, it's a valid ObjectId, proceed with `findById` call.
+    if (milik.toLowerCase() === "internal") {
+      Barang.findById(barangId)
+        .then((result) => {
+          if (!result) {
+            const err = new Error("Barang tidak ditemukan");
+            err.statusCode = 404;
+            throw err;
+          } else {
+            res.status(200).json(result);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          return next(err);
+        });
+    } else if (milik.toLowerCase() === "eksternal") {
+      BarangEks.findById(barangId)
+        .then((result) => {
+          if (!result) {
+            throw new Error("Barang tidak ditemukan");
+          }
+          console.log(result);
+          res.status(200).json(result);
+        })
+        .catch((err) => {
+          console.log(err);
+          return next(err);
+        });
+    } else {
+      throw new Error("query barang gagal");
+    }
   } else {
-    throw new Error("query barang gagal");
+    throw new Error("ID Tidak Valid");
   }
 };
