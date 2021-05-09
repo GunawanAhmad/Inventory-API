@@ -18,12 +18,6 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
-
-try {
-  fs.mkdirSync(path.join(__dirname, "images"));
-} catch (err) {
-  if (err.code !== "EEXIST") throw err;
-}
 app.use(bodyParser.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 
@@ -38,7 +32,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, errorData: data });
 });
 
-const port = process.env.PORT || 5000;
+const port = 5000;
 mongoose
   .connect(process.env.DB_URI, {
     useNewUrlParser: true,
