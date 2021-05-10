@@ -21,7 +21,7 @@ const barangEksternalSchema = new Schema({
     type: String,
     required: true,
   },
-  foto: {
+  photo: {
     type: String,
   },
   nama_pemilik: {

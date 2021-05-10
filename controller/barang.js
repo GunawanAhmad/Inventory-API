@@ -100,6 +100,7 @@ exports.hapusBarang = (req, res, next) => {
         if (!result) {
           throw new Error("barang tidak ditemukan");
         }
+        console.log("hei");
         fileHelper.deleteFile(result.photo);
         console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
