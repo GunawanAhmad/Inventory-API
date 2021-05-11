@@ -62,5 +62,6 @@ authMiddle.accesCheck,
     barangControl.cariSemuabarangEks
   );
 router.get("/barang", authMiddle.accesCheck, barangControl.detailBarang);
+router.get("/download-csv/:milik", barangControl.downloadCSV);
 
 module.exports = router;

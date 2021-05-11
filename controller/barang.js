@@ -1,6 +1,8 @@
 const Barang = require("../model/barangModel");
 const BarangEks = require("../model/barangEksternalModel");
 const fileHelper = require("../util/file");
+const Json2csvParser = require("json2csv").Parser;
+const fs = require("fs");
 
 exports.tambahBarang = (req, res, next) => {
   let { nama } = req.body;
@@ -224,5 +226,71 @@ exports.detailBarang = (req, res, next) => {
     }
   } else {
     throw new Error("ID Tidak Valid");
+  }
+};
+
+exports.downloadCSV = (req, res, next) => {
+  let milik = req.params.milik.toLowerCase();
+  if (milik == "internal") {
+    Barang.find({})
+      .then((data) => {
+        let hasil_csv = [];
+        data.forEach((barang) => {
+          hasil_csv.push({
+            nama_barang: barang.nama,
+            status: barang.status,
+            kondisi: barang.kondisi,
+            tanggal_masuk: barang.tanggal_masuk,
+            lokasi: barang.lokasi,
+            milik: barang.milik,
+            jumlah: barang.jumlah + " " + barang.satuan,
+            nama_peminjam: barang.nama_peminjam,
+            tanggal_peminjaman: barang.tanggal_peminjaman,
+          });
+        });
+        const csvFields = [];
+        const json2csvParser = new Json2csvParser({ csvFields });
+        const csv = json2csvParser.parse(hasil_csv);
+
+        fs.writeFile("barang.csv", csv, function (err) {
+          if (err) throw err;
+          res.download("barang.csv", "barang.csv");
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        next(err);
+      });
+  } else if (milik == "eksternal") {
+    BarangEks.find({})
+      .then((data) => {
+        let hasil_csv = [];
+        data.forEach((barang) => {
+          hasil_csv.push({
+            nama_barang: barang.nama,
+            status: barang.status,
+            kondisi: barang.kondisi,
+            lokasi: barang.lokasi,
+            milik: barang.milik,
+            jumlah: barang.jumlah + " " + barang.satuan,
+            nama_pemilik: barang.nama_pemilik,
+            tanggal_dipinjam: barang.tanggal_dipinjam,
+          });
+        });
+        const csvFields = [];
+        const json2csvParser = new Json2csvParser({ csvFields });
+        const csv = json2csvParser.parse(hasil_csv);
+
+        fs.writeFile("barang.csv", csv, function (err) {
+          if (err) throw err;
+          res.download("barang.csv", "barang.csv");
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        next(err);
+      });
+  } else {
+    throw new Error("milik tidak valid");
   }
 };
