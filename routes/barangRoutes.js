@@ -4,6 +4,7 @@ const router = express.Router();
 const barangControl = require("../controller/barang");
 const multer = require("multer");
 const authMiddle = require("../middleware/authMiddle");
+const gDriveHandler = require("../util/gDriveHandler.js");
 
 const filterImg = (req, file, cb) => {
   if (
@@ -35,6 +36,7 @@ router.post(
   "/tambah-barang",
   authMiddle.accesCheck,
   uploadPhoto.single("photo"),
+  gDriveHandler.uploadImgToGdrive,
   errorHandler.tambahBarangErrorHandler,
   barangControl.tambahBarang
 );
