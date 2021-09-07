@@ -13,10 +13,10 @@ exports.tambahBarang = (req, res, next) => {
   let tanggal_masuk = new Date();
   let { jumlah } = req.body;
   let { satuan } = req.body;
-  let photo = "";
-
+  let photo = req.imgLink;
+  let file = null;
   if (req.file) {
-    photo = req.file.path.replace("\\", "/");
+    file = req.file.path.replace("\\", "/");
   }
 
   let eksProp = null;
@@ -51,6 +51,7 @@ exports.tambahBarang = (req, res, next) => {
     let result = null;
     (async () => {
       result = await tambahBarang(barang);
+      fileHelper.deleteFile(file);
       try {
         res.status(200).json(result);
       } catch (err) {
