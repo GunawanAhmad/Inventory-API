@@ -70,3 +70,20 @@ exports.uploadImgToGdrive = (req, res, next) => {
     next();
   }
 };
+
+function getFileIdFromUrl(url) {
+  if (url) {
+    return url.match(/[-\w]{25,}/);
+  } else {
+    return "";
+  }
+}
+
+exports.deleteFileFromGdrive = async (imageUrl) => {
+  let fileId = getFileIdFromUrl(imageUrl);
+  if (fileId) {
+    let result = await drive.files.delete({
+      fileId: fileId,
+    });
+  }
+};

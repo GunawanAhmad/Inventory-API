@@ -3,6 +3,7 @@ const BarangEks = require("../model/barangEksternalModel");
 const fileHelper = require("../util/file");
 const Json2csvParser = require("json2csv").Parser;
 const fs = require("fs");
+const gDriveHandler = require("../util/gDriveHandler.js");
 
 exports.tambahBarang = (req, res, next) => {
   let { nama } = req.body;
@@ -89,7 +90,9 @@ exports.hapusBarang = (req, res, next) => {
         if (!result) {
           throw new Error("barang tidak ditemukan");
         }
-        fileHelper.deleteFile(result.photo);
+
+        gDriveHandler.deleteFileFromGdrive(result.photo);
+
         console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
@@ -103,8 +106,8 @@ exports.hapusBarang = (req, res, next) => {
         if (!result) {
           throw new Error("barang tidak ditemukan");
         }
-        console.log("hei");
-        fileHelper.deleteFile(result.photo);
+        gDriveHandler.deleteFileFromGdrive(result.photo);
+
         console.log("Hapus barang sukses");
         res.status(200).json({ message: "Delete Sukses", data: result });
       })
